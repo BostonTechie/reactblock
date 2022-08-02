@@ -1,54 +1,61 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
+//ddd
 const Home = () => {
-const getCryptoData = async() => {
+  const baseURL = "http://localhost:4000";
+
+  const [dataView, setDataView] = useState([])
+
+  useEffect(() => {
+    getCryptoData()
+  }, []);
+
+  const getCryptoData = async () => {
     try {
-        const response = await fetch("http://localhost:3001")
-        const jsonData = await response.json()
-        console.log(jsonData)
-
+      const response = await axios.get(baseURL);
+      setDataView(response.data);
     } catch (error) {
-        console.error(error.message)
+      console.error(error.message);
     }
-}
+  };
 
-    useEffect(() => {
-        getCryptoData()
-    })
+  console.log(dataView);
 
   return (
+    <table class="table mt-5 text-center">
+      <thead>
+        <tr>
+          <th scope="col">DataID#</th>
+          <th scope="col">Asset</th>
+          <th scope="col">From</th>
+          <th scope="col">To</th>
+          <th scope="col">Quant</th>
+          <th scope="col">Token Price</th>
+          <th scope="col">Gross</th>
+          <th scope="col">Net</th>
+          <th scope="col">Trans Type</th>
 
-<table class="table mt-5 text-center">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="1">Larry the Bird</td>
-      <td></td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
-  )
-}
+        </tr>
+      </thead>
+      <tbody>
+        {dataView.map(dataView => (
+          <tr key={dataView.dbid}>
+             <td>{dataView.dbid}</td>
+             <td>{dataView.Asset}</td>
+             <td>{dataView.From}</td>
+             <td>{dataView.To}</td>
+             <td>{dataView.Quantity}</td>
+             <td>{dataView.Gross}</td>
+             <td>{dataView[`Token Price`]}</td>
+             <td>{dataView.Net}</td>
+             <td>{dataView[`Transaction Type`]}</td>
+          </tr>
+        ))}
+     
+      </tbody>
+    </table>
+  );
+};
 
-export default Home
+export default Home;
